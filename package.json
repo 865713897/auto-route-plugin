@@ -1,0 +1,45 @@
+{
+  "name": "@elza/auto-route-plugin",
+  "version": "0.0.8",
+  "description": "自动生成路由文件插件",
+  "main": "lib/index.cjs",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "exports": {
+    "import": {
+      "types": "./lib/index.d.mts",
+      "default": "./lib/index.mjs"
+    },
+    "require": {
+      "types": "./lib/index.d.cts",
+      "default": "./lib/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "unbuild"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "webpack": ">=5.91.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "@types/webpack": "^5.28.5",
+    "unbuild": "^2.0.0"
+  },
+  "keywords": [
+    "typescript",
+    "webpack",
+    "plugin",
+    "auto-route"
+  ],
+  "author": {
+    "name": "limy",
+    "email": "lmy865713897@gmail.com"
+  },
+  "license": "MIT"
+}
