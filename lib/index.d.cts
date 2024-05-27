@@ -54,4 +54,4 @@ declare class AutoRoutePlugin {
     generateRouterComponent(appData: IAppData): Promise<unknown>;
 }
 
-export { AutoRoutePlugin as default };
+export { type IAppData, type IAutoRoutePlugin, type IRoute, type Options, AutoRoutePlugin as default, type routingModeType };

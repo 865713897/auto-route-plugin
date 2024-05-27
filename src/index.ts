@@ -11,20 +11,20 @@ import { Compiler } from 'webpack';
 
 const DEFAULT_GLOBAL_LAYOUTS = 'layouts';
 
-type routingModeType = 'browser' | 'hash';
+export type routingModeType = 'browser' | 'hash';
 
-interface IAutoRoutePlugin {
+export interface IAutoRoutePlugin {
   excludeFolders?: string[];
   routingMode?: routingModeType;
   onlyRoutes?: boolean;
   indexPath?: string;
 }
 
-interface Options {
+export interface Options {
   cwd: string; // 当前工作目录
 }
 
-interface IAppData {
+export interface IAppData {
   cwd: string;
   absSrcPath: string;
   absPagesPath: string;
@@ -35,7 +35,7 @@ interface IAppData {
   indexPath: string;
 }
 
-interface IRoute {
+export interface IRoute {
   path: string;
   name: string;
   component: string;
@@ -298,7 +298,7 @@ import { ${routerMode} as Router, Route, Routes, Navigate } from 'react-router-d
 import { getRoutes } from './routes';
 ${
   isTsComponent
-    ? '\ninterface IRoute {\n  path: string;\n  Component: React.FC;\n  children?: IRoute[];\n}'
+    ? '\ninterface IRoute {\n  path: string;\n  name: string;\n  Component: React.FC;\n  children?: IRoute[];\n}'
     : ''
 }
 
