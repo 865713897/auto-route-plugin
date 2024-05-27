@@ -7,7 +7,7 @@ import {
   mkdir,
   readFileSync,
 } from 'fs';
-import { Compiler } from 'webpack';
+import { Compiler, DefinePlugin } from 'webpack';
 
 const DEFAULT_GLOBAL_LAYOUTS = 'layouts';
 
@@ -66,6 +66,10 @@ class AutoRoutePlugin {
 
   apply(compiler: Compiler) {
     compiler.hooks.beforeCompile.tap('AutoRoutePlugin', () => {
+      // 注入变量
+      new DefinePlugin({
+        'process.env.ROUTING_MODE': JSON.stringify(compiler.options.mode),
+      }).apply(compiler);
       this.run(); // 执行插件逻辑
     });
   }
@@ -306,8 +310,10 @@ export default function AppRouter() {
   const [routes, setRoutes] = useState${isTsComponent ? '<IRoute[]>' : ''}([]);
 
   useEffect(() => {
-    const pagesContext = require.context('../pages', true, /\\.(j|t)sx?$/);
-    pagesContext.keys().forEach(pagesContext);
+    if (process.env.ROUTING_MODE === 'development') {
+      const pagesContext = require.context('../pages', true, /\\.(j|t)sx?$/);
+      pagesContext.keys().forEach(pagesContext);
+    }
     setRoutes(getRoutes());
   }, []);
 

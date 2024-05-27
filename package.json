@@ -1,6 +1,6 @@
 {
   "name": "@elza/auto-route-plugin",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "description": "自动生成路由文件插件",
   "main": "lib/index.cjs",
   "types": "lib/index.d.ts",
