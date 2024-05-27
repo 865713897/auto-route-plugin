@@ -37,6 +37,10 @@
     "plugin",
     "auto-route"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/865713897/auto-route-plugin.git"
+  },
   "author": {
     "name": "limy",
     "email": "lmy865713897@gmail.com"
