@@ -1,5 +1,5 @@
 import path from 'path';
-import { existsSync, readdirSync, statSync, readFileSync, promises as fsPromises } from 'fs';
+import { existsSync, readdirSync, statSync, readFileSync, mkdir, writeFileSync } from 'fs';
 import { Compiler, DefinePlugin } from 'webpack';
 
 export type routingModeType = 'browser' | 'hash';
@@ -74,9 +74,9 @@ class AutoRoutePlugin {
     const appData = this.getAppData({ cwd }); // 获取数据
     const routes = await this.getRoutes({ appData }); // 获取路由文件
     // 生成路由文件
-    await this.generateRoutesFile({ routes, appData });
+    this.generateRoutesFile({ routes, appData });
     if (!this.onlyRoutes) {
-      await this.generateRouterComponent(appData);
+      this.generateRouterComponent(appData);
     }
   }
 
@@ -305,32 +305,35 @@ export default function AppRouter() {
   }
 
   // 生成路由文件
-  async generateRoutesFile({ appData, routes }: { appData: IAppData; routes: IRoute[] }) {
+  generateRoutesFile({ appData, routes }: { appData: IAppData; routes: IRoute[] }) {
     const content = this.getRoutesTemplate(routes, this.isTsComponent);
     const fileSuffix = this.isTsComponent ? 'routes.tsx' : 'routes.jsx';
-    await this.writeToFileAsync(appData.absRouterPath, fileSuffix, content);
+    this.writeToFileAsync(appData.absRouterPath, fileSuffix, content);
   }
 
   // 生成路由组件
-  async generateRouterComponent(appData: IAppData) {
+  generateRouterComponent(appData: IAppData) {
     const isTsComponent = this.isTsComponent;
     const routerMode = appData.routingMode === 'browser' ? 'BrowserRouter' : 'HashRouter';
     const content = this.getRouterComponentTemplate(isTsComponent, appData.indexPath, routerMode);
     const fileSuffix = isTsComponent ? 'index.tsx' : 'index.jsx';
-    await this.writeToFileAsync(appData.absRouterPath, fileSuffix, content);
+    this.writeToFileAsync(appData.absRouterPath, fileSuffix, content);
   }
 
-  async writeToFileAsync(filePath: string, fileSuffix: string, content: string) {
+  writeToFileAsync(filePath: string, fileSuffix: string, content: string) {
     try {
-      await fsPromises.mkdir(filePath, { recursive: true });
-      const outputFile = path.join(filePath, fileSuffix);
-      await fsPromises.access(outputFile);
-      if (!this.firstRun) {
-        const oldFile = await fsPromises.readFile(outputFile, 'utf-8');
-        if (oldFile === content) return;
-      }
-      this.firstRun = false;
-      await fsPromises.writeFile(outputFile, content, 'utf-8');
+      mkdir(filePath, { recursive: true }, (err) => {
+        if (err) {
+          console.error(`Failed to generate ${fileSuffix}`, err);
+        }
+        const outputFile = path.join(filePath, fileSuffix);
+        if (existsSync(outputFile) && !this.firstRun) {
+          const oldFile = readFileSync(outputFile, 'utf-8');
+          if (oldFile === content) return;
+        }
+        this.firstRun = false;
+        writeFileSync(outputFile, content, 'utf-8');
+      });
     } catch (error) {
       console.error(`Failed to generate ${fileSuffix}`, error);
     }

@@ -64,9 +64,9 @@ declare class AutoRoutePlugin {
     generateRoutesFile({ appData, routes }: {
         appData: IAppData;
         routes: IRoute[];
-    }): Promise<void>;
-    generateRouterComponent(appData: IAppData): Promise<void>;
-    writeToFileAsync(filePath: string, fileSuffix: string, content: string): Promise<void>;
+    }): void;
+    generateRouterComponent(appData: IAppData): void;
+    writeToFileAsync(filePath: string, fileSuffix: string, content: string): void;
 }
 
 export { type IAppData, type IAutoRoutePlugin, type IRoute, type Options, AutoRoutePlugin as default, type routingModeType };
