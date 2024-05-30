@@ -56,7 +56,7 @@ class AutoRoutePlugin {
   }
 
   apply(compiler: Compiler) {
-    compiler.hooks.beforeCompile.tap('AutoRoutePlugin', async () => {
+    compiler.hooks.afterPlugins.tap('AutoRoutePlugin', async () => {
       // 注入变量
       new DefinePlugin({
         'process.env.ROUTING_MODE': JSON.stringify(compiler.options.mode),
