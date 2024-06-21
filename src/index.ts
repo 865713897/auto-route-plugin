@@ -40,6 +40,7 @@ class AutoRoutePlugin {
   indexPath = '';
   firstRun = true;
   isTsComponent = false;
+  hasLayouts = false;
   isDev = true;
 
   constructor(options: IAutoRoutePlugin) {
@@ -178,7 +179,10 @@ class AutoRoutePlugin {
         };
       });
       if (layoutRoutes.length) {
+        this.hasLayouts = true;
         resolve(layoutRoutes);
+      } else {
+        this.hasLayouts = false;
       }
       resolve(routes);
     });
@@ -255,7 +259,7 @@ export function getRoutes() {
   }
 
   // 获取路由组件模板
-  getRouterComponentTemplate(isTs: boolean, indexPath: string, routerMode: string) {
+  getRouterComponentTemplate(isTs: boolean, hasLayouts: boolean, indexPath: string, routerMode: string) {
     return `import React, { useEffect, useState } from 'react';
 import { ${routerMode} as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { getRoutes } from './routes';
@@ -270,10 +274,12 @@ export default function AppRouter() {
 
   useEffect(() => {
     if (process.env.ROUTING_MODE === 'development') {
-      const pagesContext = require.context('../pages', true, /\\.(j|t)sx?$/);
-      const layoutsContext = require.context('../layouts', true, /\\.(j|t)sx?$/);
-      pagesContext.keys().forEach(pagesContext);
-      layoutsContext.keys().forEach(layoutsContext);
+      const pagesContext = require.context('../pages', true, /\\.(j|t)sx?$/);${
+        hasLayouts ? `\n      const layoutsContext = require.context('../layouts', true, /\\.(j|t)sx?$/);` : ''
+      }
+      pagesContext.keys().forEach(pagesContext);${
+        hasLayouts ? `\n      layoutsContext.keys().forEach(layoutsContext);` : ''
+      }
     }
     setRoutes(getRoutes());
   }, []);
@@ -314,8 +320,9 @@ export default function AppRouter() {
   // 生成路由组件
   generateRouterComponent(appData: IAppData) {
     const isTsComponent = this.isTsComponent;
+    const hasLayouts = this.hasLayouts;
     const routerMode = appData.routingMode === 'browser' ? 'BrowserRouter' : 'HashRouter';
-    const content = this.getRouterComponentTemplate(isTsComponent, appData.indexPath, routerMode);
+    const content = this.getRouterComponentTemplate(isTsComponent, hasLayouts, appData.indexPath, routerMode);
     const fileSuffix = isTsComponent ? 'index.tsx' : 'index.jsx';
     this.writeToFileAsync(appData.absRouterPath, fileSuffix, content);
   }

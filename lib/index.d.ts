@@ -33,6 +33,7 @@ declare class AutoRoutePlugin {
     indexPath: string;
     firstRun: boolean;
     isTsComponent: boolean;
+    hasLayouts: boolean;
     isDev: boolean;
     constructor(options: IAutoRoutePlugin);
     apply(compiler: Compiler): void;
@@ -60,7 +61,7 @@ declare class AutoRoutePlugin {
     formatRoute(route: IRoute, level: number): string;
     renderRoutes(routes: IRoute[], level: number): any;
     getRoutesTemplate(routes: IRoute[], isTs: boolean): string;
-    getRouterComponentTemplate(isTs: boolean, indexPath: string, routerMode: string): string;
+    getRouterComponentTemplate(isTs: boolean, hasLayouts: boolean, indexPath: string, routerMode: string): string;
     generateRoutesFile({ appData, routes }: {
         appData: IAppData;
         routes: IRoute[];
