@@ -57,7 +57,7 @@ class AutoRoutePlugin {
   }
 
   apply(compiler: Compiler) {
-    compiler.hooks.afterPlugins.tap('AutoRoutePlugin', async () => {
+    compiler.hooks.watchRun.tapAsync('AutoRoutePlugin', async (_, callback) => {
       // 注入变量
       new DefinePlugin({
         'process.env.ROUTING_MODE': JSON.stringify(compiler.options.mode),
@@ -67,6 +67,7 @@ class AutoRoutePlugin {
       } catch (error) {
         console.error('AutoRoutePlugin failed', error);
       }
+      callback();
     });
   }
 
