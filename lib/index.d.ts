@@ -60,7 +60,7 @@ declare class AutoRoutePlugin {
     generateChunkName(component: string): string;
     formatRoute(route: IRoute, level: number): string;
     renderRoutes(routes: IRoute[], level: number): any;
-    getRoutesTemplate(routes: IRoute[], isTs: boolean): string;
+    getRoutesTemplate(routes: IRoute[], isTs: boolean, hasLayouts: boolean): string;
     getRouterComponentTemplate(isTs: boolean, hasLayouts: boolean, indexPath: string, routerMode: string): string;
     generateRoutesFile({ appData, routes }: {
         appData: IAppData;

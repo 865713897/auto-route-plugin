@@ -235,12 +235,13 @@ ${indent}}`;
   }
 
   // 获取路由模板
-  getRoutesTemplate(routes: IRoute[], isTs: boolean) {
+  getRoutesTemplate(routes: IRoute[], isTs: boolean, hasLayouts: boolean) {
     const componentType = isTs ? ': React.ComponentType<P>' : '';
     const lazyComponentWrapperType = isTs ? ': React.FC<P>' : '';
     const genericType = isTs ? '<P>' : '';
-    return `import React, { Suspense } from 'react';
-import { Navigate } from 'react-router-dom';
+    return `import React, { Suspense } from 'react';${
+      hasLayouts ? `\nimport { Navigate } from 'react-router-dom';` : ''
+    }
     
 function withLazyLoad${genericType}(LazyComponent${componentType}) {
   const lazyComponentWrapper${lazyComponentWrapperType} = (props) => (
@@ -313,7 +314,7 @@ export default function AppRouter() {
 
   // 生成路由文件
   generateRoutesFile({ appData, routes }: { appData: IAppData; routes: IRoute[] }) {
-    const content = this.getRoutesTemplate(routes, this.isTsComponent);
+    const content = this.getRoutesTemplate(routes, this.isTsComponent, this.hasLayouts);
     const fileSuffix = this.isTsComponent ? 'routes.tsx' : 'routes.jsx';
     this.writeToFileAsync(appData.absRouterPath, fileSuffix, content);
   }
